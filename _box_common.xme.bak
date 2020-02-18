@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<STAYRESOURCE version="2.0">
+	<DEFINE name="SELGroupU" value="7033" />
+	<DEFINE name="SELUARM" value="9527" />
+	<DEFINE name="SELURN" value="9525" />
+	<FIELD name="GU_NameGroup" type="STR" size="16" comm="наимен. группы пользователей" />
+	<FIELD name="NL_NetName" type="STR" size="14" comm="имя узла" />
+	<FIELD name="RajName" type="STR" size="200" />
+	<FIELD name="RL_RnName" type="STR" size="16" comm="имя района" />
+	<FIELD name="SB_Prg" type="STR" size="32" comm="задача" />
+	<FIELD name="SB_Proc" type="STR" size="32" comm="имя задачи" />
+	<FIELD name="SB_ProcC" type="UI1" comm=" цвет  задачи" />
+	<FIELD name="SB_ProcCD" type="STR" size="79" comm="текущий дирректорий" />
+	<FIELD name="SB_ProcComm" type="STR" size="127" comm="комментарий к задаче" />
+	<FIELD name="SB_ProcNpp" type="UI2" comm="порядковый номер задачи" />
+	<FIELD name="SB_ProcStr" type="STR" size="79" comm="строка вызова задачи" />
+	<FIELD name="SB_ProcView" type="UI2" comm="порядок отображения задачи" />
+	<FIELD name="SU_Screen" type="UI1" comm="режим экрана" />
+	<FIELD name="TmpAccW" type="STR" size="40" comm="права в окне" />
+	<FIELD name="TmpDtW" type="STR" size="50" comm="текущая дата в главном окне" />
+	<FIELD name="TmpNetName" type="STR" size="255" />
+	<FIELD name="TmpNetW" type="STR" size="14" comm="узел в главном окне" />
+	<FIELD name="TmpRnNet" type="STR" size="8" comm="жутко временная подстрока" />
+	<FIELD name="TmpRnNet2" type="STR" size="5" comm="жутко временная подстрока" />
+	<FIELD name="TmpRnW" type="STR" size="16" comm="р-н в главном окне" />
+	<FIELD name="TmpUsNW" type="STR" size="80" comm="имя пользователя в главном окне" />
+	<FIELD name="User_Comm" type="STR" size="127" comm="комментарий к пользователю" />
+	<FIELD name="User_Hay" type="UI1" comm="режим доступа" />
+	<FIELD name="User_ID" type="STR" size="32" comm="идентификатор пользователя" />
+	<FIELD name="User_IDName" type="STR" size="64" comm="имя пользователя" />
+	<FIELD name="User_Passw" type="STR" size="32" comm="пароль пользователя" />
+	<FIELD name="User_UserNum" type="UI2" comm="код инспектора" />
+	<FIELD name="Cont_Name" type="STR" size="20" comm="Найменування модулю" />
+	<FIELD name="Cont_Path" type="STR" size="255" comm="Шлях до модулю" />
+	<FIELD name="Cont_ChkSum" type="STR" size="32" comm="Контрольна сума модулю" />
+	<FIELD name="Cont_Version" type="STR" size="40" comm="Версія модулю" />
+	<DATASET name="B_AccProc" type="DS_ARRAY" comm="список доступных польз.задач">
+		<INDEX name="1">
+			<KEY name="SB_ProcNpp" />
+		</INDEX>
+		<COLUMN name="SB_ProcNpp" />
+	</DATASET>
+	<DATASET name="B_AccR" type="DS_ARRAY" comm="список доступных польз. р-нов">
+		<INDEX name="1">
+			<KEY name="NL_NetName" />
+			<KEY name="RL_RnName" />
+		</INDEX>
+		<COLUMN name="NL_NetName" />
+		<COLUMN name="RL_RnName" />
+	</DATASET>
+	<DATASET name="B_GroupU" type="DS_ARRAY" file="RES:BGROUPU.DT" comm="группы пользователей">
+		<INDEX name="1">
+			<KEY name="GU_NameGroup" />
+		</INDEX>
+		<COLUMN name="GU_NameGroup" />
+		<COLUMN name="B_ListUsers" />
+	</DATASET>
+	<DATASET name="B_ListUsers" type="DS_ARRAY" comm="список пользователей группы">
+		<INDEX name="1">
+			<KEY name="User_UserNum" />
+		</INDEX>
+		<COLUMN name="User_UserNum" />
+	</DATASET>
+	<DATASET name="B_Proc" type="DS_QBASE" qnt="16" file="ASOPD:BPROC4.DT" comm="Задачи">
+		<INDEX name="1">
+			<KEY name="SB_ProcNpp" />
+		</INDEX>
+		<INDEX name="2">
+			<KEY name="SB_ProcView" />
+		</INDEX>
+		<COLUMN name="SB_ProcNpp" />
+		<COLUMN name="SB_ProcView" />
+		<COLUMN name="SB_Proc" />
+		<COLUMN name="SB_ProcCD" />
+		<COLUMN name="SB_ProcC" />
+		<COLUMN name="SB_ProcStr" />
+		<COLUMN name="SB_ProcComm" />
+	</DATASET>
+	<DATASET name="B_User" type="DS_BBASE" qnt="16" file="RES:BUSER.DT" comm="Список пользователей">
+		<INDEX name="1">
+			<KEY name="User_UserNum" />
+		</INDEX>
+		<COLUMN name="User_UserNum" />
+		<COLUMN name="SU_Screen" />
+		<COLUMN name="User_Hay" />
+		<COLUMN name="NL_NetName" />
+		<COLUMN name="User_ID" />
+		<COLUMN name="GU_NameGroup" />
+		<COLUMN name="User_IDName" />
+		<COLUMN name="RL_RnName" />
+		<COLUMN name="User_Passw" />
+		<COLUMN name="SB_ProcNpp" />
+		<COLUMN name="User_Comm" />
+		<COLUMN name="B_AccProc" />
+		<COLUMN name="B_AccR" />
+	</DATASET>
+	<DATASET name="B_Content" type="DS_ARRAY" comm="Перелік модулів системи">
+		<INDEX name="1">
+			<KEY name="Cont_Name" length="20" />
+		</INDEX>
+		<COLUMN name="Cont_Name" />
+		<COLUMN name="Cont_Path" />
+		<COLUMN name="Cont_ChkSum" />
+		<COLUMN name="Cont_Version" />
+	</DATASET>
+	<MENUBAR name="pop_menu" popup="true">
+		<MENU-ITEM text="Змінити користувача" id="10102" />
+		<MENU-ITEM text="Змінити район" id="10101" />
+		<SEPARATOR />
+		<MENU-ITEM text="Калькулятор" id="10202" />
+		<MENU-ITEM text="Календар" id="10201" />
+		<MENU-ITEM text="Папка звітів" id="10203" />
+		<MENU-ITEM text="Принтер" id="10204" />
+		<MENU-ITEM text="Бази даних" id="10205" />
+		<SEPARATOR />
+		<MENU-ITEM text="Вихід" id="10206" />
+	</MENUBAR>
+	<MENUBAR name="WBMain_menu">
+		<MENU text="Сервiс">
+			<MENU-ITEM text="Календар" id="10201" />
+			<MENU-ITEM text="Калькулятор" id="10202" />
+			<MENU-ITEM text="Папка звітів" id="10203" />
+			<MENU-ITEM text="Принтер" id="10204" />
+			<MENU-ITEM text="Бази даних" id="10205" />
+			<SEPARATOR />
+			<MENU-ITEM text="Перегляд протоколу" id="10305" />
+			<SEPARATOR />
+			<MENU-ITEM text="Вихід" id="10206" />
+		</MENU>
+		<MENU text="Змiнити">
+			<MENU-ITEM text="Район" id="10101" />
+			<MENU-ITEM text="Користувача" id="10102" />
+		</MENU>
+		<MENU text="Настроювання">
+			<MENU-ITEM text="Задач" id="10301" />
+			<MENU-ITEM text="Користувачiв" id="10302" />
+			<MENU-ITEM text="Робочих станцій" id="10306" />
+			<SEPARATOR />
+			<MENU-ITEM text="Областей" id="10303" />
+			<MENU-ITEM text="Районiв" id="10304" />
+		</MENU>
+		<MENU text="Допомога">
+			<MENU-ITEM text="Як користуватися допомогою" id="11001" />
+			<MENU-ITEM text="Контекстна допомога" id="11002" />
+			<SEPARATOR />
+			<MENU-ITEM text="Про програму" id="11003" />
+		</MENU>
+	</MENUBAR>
+	<FRAME name="WBMain" x="5" y="5" cx="780" cy="430" mode="MODIFIED" text="Оболонка середовища функціонування    ІОЦ Мінсоц політики України" minbox="true" maxbox="true" sizebox="true" center="true" maximize="true" menu="WBMain_menu">
+		<STAYGRID x="0" y="0" cx="455" cy="355" mode="SELECTED" id="3000" source="B_Proc" hrow="20" anchor="left+right+top+bottom">
+			<STAYEDIT x="5" y="0" cx="420" cy="18" mode="NORMAL" id="3012" font="Arial" fontsize="10" bold="true" source="SB_Proc" />
+		</STAYGRID>
+		<STAYBUTTON x="5" y="360" cx="100" cy="20" mode="CLICKED" id="_F1" text="F1-Допомога" tip="(F1) - Виклик довідкової системі" anchor="bottom" />
+		<STAYBUTTON x="110" y="360" cx="100" cy="20" mode="CLICKED" id="_Enter" text="Enter-Вибір" tip="(Enter) - Вибір задачи для виконання" anchor="bottom" />
+		<STAYBUTTON x="215" y="360" cx="100" cy="20" mode="CLICKED" id="_F12" text="F12-Задача" tip="(F12) - Показ шляху та имені модуля задачи" anchor="bottom" />
+		<STAYBUTTON x="320" y="360" cx="100" cy="20" mode="CLICKED" id="_AltX" text="AltX-Вихід" tip="(AltX) - Вихід із оболонки" anchor="bottom" />
+		<STAYGROUP x="463" y="15" cx="305" cy="110" mode="GREYED" id="5000" anchor="right">
+			<STAYEDIT x="7" y="10" cx="290" cy="20" mode="GREYED" id="3001" source="TmpDtW" align="center" />
+			<STAYEDIT x="7" y="33" cx="290" cy="18" mode="GREYED" id="3002" source="TmpUsNW" />
+			<STAYEDIT x="139" y="54" cx="76" cy="18" mode="GREYED" id="3003" source="TmpNetW" align="right" />
+			<STAYEDIT x="217" y="54" cx="80" cy="18" mode="GREYED" id="3004" source="TmpRnW" align="right" />
+			<STAYEDIT x="7" y="75" cx="290" cy="18" mode="GREYED" id="3006" source="TmpNetName" align="center" />
+			<STAYEDIT x="7" y="54" cx="130" cy="18" mode="GREYED" id="3007" source="TmpAccW" />
+		</STAYGROUP>
+		<STAYGROUP x="461" y="232" cx="300" cy="145" mode="GREYED" id="3015" anchor="right+bottom">
+			<STAYEDIT x="5" y="5" cx="288" cy="134" mode="GREYED" id="3016" source="SB_ProcComm" anchor="left+right+top+bottom" />
+		</STAYGROUP>
+		<STAYSTATIC x="465" y="202" cx="144" cy="20" mode="MODIFIED" id="3010" text="Коментар до задачі" anchor="right+bottom" />
+		<STAYSTATIC x="465" y="150" cx="300" cy="20" mode="GREYED" text="Контекстний пошук задачі:" anchor="right+bottom" />
+		<STAYSTATIC x="465" y="170" cx="300" cy="20" mode="GREYED" id="8000" color="#0000ff" anchor="right+bottom" />
+	</FRAME>
+	<FRAME name="WSocFlash" x="5" y="5" cx="640" cy="320" mode="NORMAL" text="МПСП" bgcolor="#c08000" center="true" maximize="true">
+		<STAYSTATIC x="5" y="25" cx="610" cy="25" mode="NORMAL" id="6001" text="АВТОМАТИЗОВАНА СИСТЕМА" bgcolor="#c08000" color="#ffffff" font="Arial" fontsize="14" bold="true" align="center" anchor="left+right" />
+		<STAYSTATIC x="5" y="55" cx="615" cy="20" mode="NORMAL" id="6002" text="МІНІСТЕРСТВА СОЦІАЛЬНОЇ ПОЛІТИКИ УКРАЇНИ" bgcolor="#c08000" color="#ffffff" font="Arial" fontsize="14" bold="true" align="center" anchor="left+right" />
+		<STAYSTATIC x="5" y="265" cx="610" cy="20" mode="NORMAL" id="6003" text="(C) Copyright Інформаційно-обчислювальний центр МПСП України - 2010" bgcolor="#c08000" color="#ffffff" font="" fontsize="12" align="center" anchor="left+right+bottom" />
+	</FRAME>
+	<FRAME name="WAsopdFlash" x="5" y="5" cx="640" cy="320" mode="NORMAL" text="АСОПД - W" bgcolor="#800000" center="true" maximize="true">
+		<STAYSTATIC x="5" y="15" cx="625" cy="20" mode="NORMAL" id="6003" text="АВТОМАТИЗОВАНА СИСТЕМА ОБРОБКИ" bgcolor="#800000" color="#00ffff" font="Arial" fontsize="14" bold="true" align="center" anchor="left+right" />
+		<STAYSTATIC x="5" y="45" cx="620" cy="20" mode="NORMAL" id="6004" text="ПЕНСІЙНОЇ ДОКУМЕНТАЦІЇ" bgcolor="#800000" color="#00ffff" font="Arial" fontsize="14" bold="true" align="center" anchor="left+right" />
+		<STAYSTATIC x="5" y="80" cx="625" cy="25" mode="NORMAL" id="6005" text="АСОПД / КОМТЕХ-W" bgcolor="#800000" color="#ffff00" font="Arial" fontsize="16" bold="true" align="center" anchor="left+right" />
+		<STAYSTATIC x="5" y="265" cx="625" cy="20" mode="NORMAL" id="6006" text="(C) Copyright Інформаційно-обчислювальний центр МПСП України - 2002" bgcolor="#800000" color="#ffffff" font="Arial" fontsize="12" bold="true" align="center" anchor="left+right+bottom" />
+	</FRAME>
+	<FRAME name="WCenterFlash" x="5" y="5" cx="640" cy="320" mode="NORMAL" text="МПСП" bgcolor="#404000" center="true" maximize="true">
+		<STAYSTATIC x="5" y="25" cx="610" cy="25" mode="NORMAL" id="6001" text="ЦЕНТРАЛЬНЕ СХОВИЩЕ" bgcolor="#404000" color="#ffffff" font="Arial" fontsize="14" bold="true" align="center" anchor="left+right" />
+		<STAYSTATIC x="5" y="55" cx="615" cy="20" mode="NORMAL" id="6002" text="МІНІСТЕРСТВА СОЦІАЛЬНОЇ ПОЛІТИКИ УКРАЇНИ" bgcolor="#404000" color="#ffffff" font="Arial" fontsize="14" bold="true" align="center" anchor="left+right" />
+		<STAYSTATIC x="5" y="265" cx="610" cy="20" mode="NORMAL" id="6003" text="(C) Copyright Інформаційно-обчислювальний центр МСП України - 2003" bgcolor="#404000" color="#ffffff" font="Arial" fontsize="12" align="center" anchor="left+right+bottom" />
+	</FRAME>
+  <FRAME name="WEdarpFlash" x="5" y="5" cx="640" cy="320" mode="NORMAL" text="ЄДАРП" bgcolor="#404000" center="true" maximize="true">
+    <STAYSTATIC x="5" y="25" cx="610" cy="25" mode="NORMAL" id="6001" text="ЄДИНИЙ ДЕРЖАВНИЙ АВТОМАТИЗОВАНИЙ РЕЄСТР" bgcolor="#404000" color="#ffffff" font="Arial" fontsize="14" bold="true" align="center" anchor="left+right" />
+    <STAYSTATIC x="5" y="55" cx="615" cy="20" mode="NORMAL" id="6002" text="ОСІБ, ЯКІ МАЮТЬ ПРАВО НА ПІЛЬГИ" bgcolor="#404000" color="#ffffff" font="Arial" fontsize="14" bold="true" align="center" anchor="left+right" />
+    <STAYSTATIC x="5" y="265" cx="610" cy="20" mode="NORMAL" id="6003" text="(C) Copyright Інформаційно-обчислювальний центр МПСП України - 2004" font="Arial" bgcolor="#404000" color="#ffffff" fontsize="12" align="center" anchor="left+right+bottom" />
+  </FRAME>
+  <FRAME name="WgetID" x="5" y="5" cx="340" cy="160" mode="MODIFIED" text="Реєстрація користувача" bgcolor="#c0c0c0" center="true">
+		<STAYEDIT x="10" y="30" cx="292" cy="18" mode="MODIFIED" id="3001" source="User_ID" />
+		<STAYBUTTON x="302" y="30" cx="18" cy="18" mode="CLICKED" id="_F2" text="..." tip="(F2) - Вибір користувача із переліку груп і користувачів." align="left" />
+		<STAYEDIT x="10" y="70" cx="292" cy="18" mode="MODIFIED" id="3002" source="User_Passw" />
+		<STAYBUTTON x="8" y="100" cx="80" cy="20" mode="SELECTED" id="2001" text="Далі" tip="(Enter) - Продовження виконання программи після введення ідентификатору та паролю." />
+		<STAYBUTTON x="93" y="100" cx="80" cy="20" mode="SELECTED" id="_Esc" text="Вихід" tip="(Esc) - Вихід із программи" />
+		<STAYSTATIC x="10" y="10" cx="293" cy="15" mode="NORMAL" text="Ідентифікатор" bgcolor="#c0c0c0" />
+		<STAYSTATIC x="10" y="50" cx="292" cy="15" mode="NORMAL" text="Пароль" bgcolor="#c0c0c0" />
+		<STAYSTATIC x="178" y="102" cx="151" cy="15" mode="MODIFIED" text="F2 Вибір користувача" bgcolor="#c0c0c0" />
+	</FRAME>
+	<FRAME name="WGroup" x="5" y="5" cx="240" cy="270" mode="MODIFIED" text="Групи користувачів" center="true">
+		<STAYGRID x="0" y="0" cx="233" cy="180" mode="MODIFIED" id="3000" source="B_GroupU" ins="true" del="true" hrow="20" anchor="bottom" dock="top">
+			<STAYEDIT x="0" y="0" cx="210" cy="20" mode="MODIFIED" source="GU_NameGroup" />
+		</STAYGRID>
+		<STAYBUTTON x="10" y="190" cx="80" cy="20" mode="SELECTED" id="3002" text="Вибір" tip="Вибір" anchor="bottom" />
+		<STAYBUTTON x="92" y="190" cx="80" cy="20" mode="SELECTED" id="_Esc" text="Вихід" tip="(Esc) - Вихід" exit="true" anchor="bottom" />
+		<STAYBUTTON x="10" y="215" cx="80" cy="20" mode="SELECTED" id="_Ins" text="Додати" tip="(Ins) - Додати" anchor="bottom" />
+		<STAYBUTTON x="92" y="215" cx="80" cy="20" mode="SELECTED" id="_CtY" text="Видалити" tip="(CtY) - Видалити" anchor="bottom" />
+	</FRAME>
+	<FRAME name="WListRn" x="4" y="4" cx="466" cy="268" mode="MODIFIED" text="Доступні райони та вузли" minbox="true" maxbox="true" sizebox="true" center="true">
+		<STAYTABLE x="0" y="0" cx="460" cy="204" mode="SELECTED" id="3000" source="B_AccR" hrow="18" hhead="20" anchor="bottom" dock="top">
+			<STAYEDIT cx="60" mode="NORMAL" id="3001" text="Область" source="NL_NetName" />
+			<STAYEDIT cx="60" mode="NORMAL" id="3002" text="Район" source="RL_RnName" />
+			<STAYEDIT cx="337" mode="NORMAL" id="3003" text="Назва" source="RajName" />
+		</STAYTABLE>
+		<STAYBUTTON x="6" y="215" cx="80" cy="20" mode="SELECTED" id="2001" text="Додати" tip="Додати район" anchor="bottom" />
+		<STAYBUTTON x="88" y="215" cx="96" cy="20" mode="SELECTED" id="2003" text="Додати всі" tip="Додати всі райони" anchor="bottom" />
+		<STAYBUTTON x="186" y="215" cx="80" cy="20" mode="SELECTED" id="2002" text="Видалити" tip="Видалити район" anchor="bottom" />
+		<STAYBUTTON x="268" y="215" cx="100" cy="20" mode="SELECTED" id="2004" text="Видалити всі" tip="Видалити всі райони" anchor="bottom" />
+		<STAYBUTTON x="370" y="215" cx="80" cy="20" mode="SELECTED" id="_Esc" text="Вихід" tip="(Esc) - Вихід" anchor="bottom" />
+	</FRAME>
+	<FRAME name="WListUserID" x="5" y="5" cx="435" cy="260" mode="MODIFIED" text="Вибір користувача" minbox="true" maxbox="true" sizebox="true" center="true">
+		<STAYTREE x="0" y="0" cx="428" cy="197" mode="SELECTED" id="3002" text="STAYGROUP" anchor="bottom" dock="top" />
+		<STAYBUTTON x="5" y="205" cx="80" cy="20" mode="SELECTED" id="_Enter" text="Вибір" tip="(Enter) - Вибір користувача" anchor="bottom" />
+		<STAYBUTTON x="340" y="205" cx="80" cy="20" mode="SELECTED" id="_Esc" text="Вихід" tip="(Esc) - Вихід без вибору" exit="true" anchor="bottom" />
+	</FRAME>
+	<FRAME name="WProcParam" x="4" y="4" cx="541" cy="264" mode="MODIFIED" text="Властивостi задачі" minbox="true" maxbox="true" sizebox="true" center="true">
+		<STAYEDIT x="10" y="30" cx="400" cy="20" mode="MODIFIED" id="3001" source="SB_Proc" space="true" zero="true" duty="true" />
+		<STAYEDIT x="80" y="60" cx="330" cy="60" mode="MODIFIED" id="3002" source="SB_ProcComm" zero="true" clear="true" />
+		<STAYEDIT x="10" y="140" cx="400" cy="20" mode="MODIFIED" id="3003" source="SB_ProcCD" zero="true" clear="true" />
+		<STAYEDIT x="10" y="180" cx="400" cy="20" mode="MODIFIED" id="3004" source="SB_ProcStr" space="true" zero="true" duty="true" />
+		<STAYSTATIC x="8" y="8" cx="100" cy="16" mode="NORMAL" text="Назва задачі" tip="Назва задачі" />
+		<STAYSTATIC x="10" y="60" cx="64" cy="16" mode="NORMAL" text="Коментар" />
+		<STAYSTATIC x="10" y="120" cx="92" cy="16" mode="NORMAL" text="Робоча папка" tip="Повний путь папки, де розміщується модуль" />
+		<STAYSTATIC x="10" y="160" cx="73" cy="16" mode="NORMAL" text="Параметри" tip="Повне им&apos;я модуля та параметри його запуска" />
+		<STAYGROUP x="416" y="32" cx="110" cy="162" mode="CLICKED" tip="Колір назви задачі">
+			<STAYEDIT x="10" y="10" cx="20" cy="20" mode="CLICKED" id="5001" bgcolor="#8080ff" color="#ffffff" align="center" />
+			<STAYEDIT x="30" y="10" cx="20" cy="20" mode="CLICKED" id="5002" bgcolor="#0000ff" color="#ffffff" align="center" />
+			<STAYEDIT x="60" y="10" cx="20" cy="20" mode="CLICKED" id="5003" bgcolor="#404080" color="#ffffff" align="center" />
+			<STAYEDIT x="80" y="10" cx="20" cy="20" mode="CLICKED" id="5004" bgcolor="#000040" color="#ffffff" align="center" />
+			<STAYEDIT x="10" y="30" cx="20" cy="20" mode="CLICKED" id="5005" bgcolor="#80ffff" color="#ffffff" align="center" />
+			<STAYEDIT x="30" y="30" cx="20" cy="20" mode="CLICKED" id="5006" bgcolor="#4080ff" color="#ffffff" align="center" />
+			<STAYEDIT x="60" y="30" cx="20" cy="20" mode="CLICKED" id="5007" bgcolor="#008080" color="#ffffff" align="center" />
+			<STAYEDIT x="80" y="30" cx="20" cy="20" mode="CLICKED" id="5008" bgcolor="#80ff80" color="#ffffff" align="center" />
+			<STAYEDIT x="10" y="60" cx="20" cy="20" mode="CLICKED" id="5009" bgcolor="#008000" color="#ffffff" align="center" />
+			<STAYEDIT x="30" y="60" cx="20" cy="20" mode="CLICKED" id="5010" bgcolor="#808000" color="#ffffff" align="center" />
+			<STAYEDIT x="60" y="60" cx="20" cy="20" mode="CLICKED" id="5011" bgcolor="#808080" color="#ffffff" align="center" />
+			<STAYEDIT x="80" y="60" cx="20" cy="20" mode="CLICKED" id="5012" bgcolor="#ffff00" color="#ffffff" align="center" />
+			<STAYEDIT x="10" y="80" cx="20" cy="20" mode="CLICKED" id="5013" bgcolor="#804000" color="#ffffff" align="center" />
+			<STAYEDIT x="30" y="80" cx="20" cy="20" mode="CLICKED" id="5014" bgcolor="#ff0000" color="#ffffff" align="center" />
+			<STAYEDIT x="60" y="80" cx="20" cy="20" mode="CLICKED" id="5015" bgcolor="#ff8000" color="#ffffff" align="center" />
+			<STAYEDIT x="80" y="80" cx="20" cy="20" mode="CLICKED" id="5016" bgcolor="#ff8080" color="#ffffff" align="center" />
+			<STAYEDIT x="10" y="110" cx="20" cy="20" mode="CLICKED" id="5017" bgcolor="#c080ff" color="#ffffff" align="center" />
+			<STAYEDIT x="30" y="110" cx="20" cy="20" mode="CLICKED" id="5018" bgcolor="#c08080" color="#ffffff" align="center" />
+			<STAYEDIT x="60" y="110" cx="20" cy="20" mode="CLICKED" id="5019" bgcolor="#400080" color="#ffffff" align="center" />
+			<STAYEDIT x="80" y="110" cx="20" cy="20" mode="CLICKED" id="5020" bgcolor="#800080" color="#ffffff" align="center" />
+			<STAYEDIT x="10" y="130" cx="20" cy="20" mode="CLICKED" id="5021" bgcolor="#8000ff" color="#ffffff" align="center" />
+			<STAYEDIT x="30" y="130" cx="20" cy="20" mode="CLICKED" id="5022" bgcolor="#ff0080" color="#ffffff" align="center" />
+			<STAYEDIT x="60" y="130" cx="20" cy="20" mode="CLICKED" id="5023" bgcolor="#ffffff" color="#000000" align="center" />
+			<STAYEDIT x="80" y="130" cx="20" cy="20" mode="CLICKED" id="5024" bgcolor="#c08000" color="#ffffff" align="center" />
+		</STAYGROUP>
+		<STAYBUTTON x="100" y="210" cx="70" cy="20" mode="SELECTED" id="_Esc" text="Вихід" tip="(Esc) - Вихід" exit="true" />
+		<STAYSTATIC x="417" y="12" cx="49" cy="20" mode="MODIFIED" text="Колір" />
+		<STAYBUTTON x="20" y="210" cx="70" cy="20" mode="MODIFIED" id="_Ok" text="Зберегти" tip="Зберегти параметры та вийти" exit="true" />
+	</FRAME>
+	<FRAME name="WProcSet" x="5" y="5" cx="610" cy="452" mode="MODIFIED" text="Настроювання задач" minbox="true" maxbox="true" sizebox="true" center="true">
+		<STAYTABLE x="0" y="0" cx="603" cy="367" mode="SELECTED" id="3001" source="B_Proc" hrow="20" hhead="20" anchor="bottom" dock="top">
+			<STAYEDIT cx="290" mode="NORMAL" id="3012" text="Задача" source="SB_Proc" />
+			<STAYEDIT cx="288" mode="NORMAL" text="Модуль" source="SB_ProcStr" />
+		</STAYTABLE>
+		<STAYBUTTON x="10" y="375" cx="80" cy="20" mode="SELECTED" id="_F3" text="Змінити" tip="(F3) - змінити параметри задачі" anchor="bottom" />
+		<STAYBUTTON x="180" y="375" cx="100" cy="20" mode="SELECTED" id="_F2" text="Перенести  /\" tip="(F2) - перенести задачу догори у списку задач" anchor="bottom" />
+		<STAYBUTTON x="180" y="400" cx="100" cy="20" mode="SELECTED" id="_CtF2" text="Перенести  \/" tip="(CtF2) - перенести задачу донизу у списку задач" anchor="bottom" />
+		<STAYBUTTON x="10" y="400" cx="80" cy="20" mode="SELECTED" id="_Ins" text="Додати" tip="(Ins) - додати нову задачу" anchor="bottom" />
+		<STAYBUTTON x="94" y="400" cx="80" cy="20" mode="SELECTED" id="_CtY" text="Видалити" tip="(CtY) - видалити задачу" anchor="bottom" />
+		<STAYBUTTON x="515" y="400" cx="80" cy="20" mode="SELECTED" id="_Esc" text="Вихід" tip="(Esc) - Вихід" exit="true" anchor="bottom" />
+	</FRAME>
+	<FRAME name="WSelProc" x="5" y="5" cx="450" cy="250" mode="MODIFIED" text="Перелiк доступних задач" center="true">
+		<STAYGRID x="0" y="0" cx="440" cy="185" mode="SELECTED" id="3000" source="B_Proc" hrow="20" anchor="bottom" dock="top">
+			<STAYEDIT x="5" y="0" cx="410" cy="20" mode="NORMAL" source="SB_Proc" />
+		</STAYGRID>
+		<STAYBUTTON x="5" y="195" cx="90" cy="20" mode="SELECTED" id="3001" text="Недоступні" anchor="bottom" />
+		<STAYBUTTON x="105" y="195" cx="90" cy="20" mode="SELECTED" id="3002" text="Виключити" anchor="bottom" />
+		<STAYBUTTON x="345" y="195" cx="90" cy="20" mode="SELECTED" id="_Esc" text="Вихід" tip="(Esc) - Вихід" exit="true" anchor="bottom" />
+	</FRAME>
+	<FRAME name="WUserParam" x="5" y="5" cx="550" cy="205" mode="MODIFIED" text="Властивості користувача" center="true">
+		<STAYEDIT x="120" y="20" cx="292" cy="20" mode="MODIFIED" id="3011" source="User_ID" space="true" zero="true" duty="true" />
+		<STAYEDIT x="120" y="40" cx="49" cy="20" mode="MODIFIED" id="3012" source="User_UserNum" space="true" duty="true" min="2" />
+		<STAYEDIT x="120" y="60" cx="292" cy="20" mode="MODIFIED" id="3013" source="User_Passw" zero="true" clear="true" />
+		<STAYGROUP x="120" y="83" cx="145" cy="65" mode="MODIFIED">
+			<STAYRADIO x="10" y="4" cx="100" cy="16" mode="MODIFIED" text="користувач" source="User_Hay" mask="0" />
+			<STAYRADIO x="10" y="22" cx="120" cy="16" mode="MODIFIED" text="адміністратор" source="User_Hay" mask="1" />
+			<STAYRADIO x="10" y="40" cx="100" cy="16" mode="MODIFIED" text="супервізор" source="User_Hay" mask="2" />
+		</STAYGROUP>
+		<STAYEDIT x="120" y="151" cx="292" cy="20" mode="MODIFIED" id="3014" source="User_IDName" space="true" zero="true" duty="true" />
+		<STAYBUTTON x="420" y="14" cx="110" cy="20" mode="SELECTED" id="SELURN" text="Райони" />
+		<STAYBUTTON x="420" y="37" cx="110" cy="20" mode="SELECTED" id="SELUARM" text="Задачі" />
+		<STAYBUTTON x="420" y="60" cx="110" cy="20" mode="SELECTED" id="SELGroupU" text="Групи" />
+		<STAYSTATIC x="10" y="20" cx="97" cy="16" mode="NORMAL" text="Ідентифікатор" />
+		<STAYSTATIC x="10" y="40" cx="107" cy="16" mode="NORMAL" text="Код спецiалiста" />
+		<STAYSTATIC x="10" y="60" cx="49" cy="16" mode="NORMAL" text="Пароль" />
+		<STAYSTATIC x="10" y="80" cx="42" cy="16" mode="NORMAL" text="Права" />
+		<STAYSTATIC x="10" y="151" cx="24" cy="16" mode="NORMAL" text="Ім&apos;я" />
+		<STAYEDIT x="420" y="80" cx="110" cy="20" mode="NORMAL" source="GU_NameGroup" />
+		<STAYBUTTON x="437" y="147" cx="80" cy="20" mode="SELECTED" id="_Esc" text="Вихід" tip="(Esc) - Вийти без збереження параметрів" exit="true" anchor="right" />
+	</FRAME>
+	<FRAME name="WUserSet" x="5" y="5" cx="600" cy="450" mode="MODIFIED" text="Настроювання користувачiв" minbox="true" maxbox="true" sizebox="true" center="true">
+		<STAYTABLE x="0" y="0" cx="592" cy="342" mode="SELECTED" id="3001" source="B_User" hrow="18" hhead="20" anchor="bottom" dock="top">
+			<STAYEDIT cx="50" mode="NORMAL" id="3002" text="Номер" source="User_UserNum" />
+			<STAYEDIT cx="190" mode="NORMAL" id="3003" text="Идентифікатор" source="User_ID" />
+			<STAYEDIT cx="321" mode="NORMAL" id="3004" text="І&apos;мя користувача" source="User_IDName" />
+		</STAYTABLE>
+		<STAYEDIT x="5" y="349" cx="580" cy="18" mode="GREYED" id="3005" source="SB_Prg" anchor="bottom" />
+		<STAYBUTTON x="5" y="372" cx="85" cy="20" mode="SELECTED" id="_F3" text="Змінити" tip="(F3) - змінити параметри користувача" anchor="bottom" />
+		<STAYBUTTON x="100" y="372" cx="85" cy="20" mode="SELECTED" id="_F5" text="Оновити" tip="(F5) - оновити таблицю на основі стану мережi" anchor="bottom" />
+		<STAYBUTTON x="5" y="399" cx="85" cy="20" mode="SELECTED" id="_Ins" text="Додати" tip="(Ins) - додати нового користувача" anchor="bottom" />
+		<STAYBUTTON x="100" y="399" cx="85" cy="20" mode="SELECTED" id="_CtY" text="Видалити" tip="(CtY) - видалити користувача" anchor="bottom" />
+		<STAYBUTTON x="500" y="398" cx="85" cy="20" mode="SELECTED" id="_Esc" text="Вихід" tip="(Esc) - Вийти" exit="true" anchor="bottom" />
+	</FRAME>
+</STAYRESOURCE>
