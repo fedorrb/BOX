@@ -3,11 +3,26 @@
 //  Функции среды функционирования
 //
 ////////////////////////////////////////////////////////////////////////////////////
+//FRB TCPClient begin
+//#ifndef WIN32_LEAN_AND_MEAN
+//#define WIN32_LEAN_AND_MEAN
+//#endif
+
+//#include <Windows.h>
+#include <process.h>
+//#include <iostream>
+//#include <fstream>
+
+#define STRICT 1 
+//FRB TCPClient end
+#include <string>
 #include "vcconfig.h"
 #include "_box_common.h"
 #include "resource.h"
 #include "station_ident.h"
 #include "moduls_check.h"
+#include "server_adr.h" //FRB TCPClient
+#include "singleton.h" //FRB TCPClient
 
 //Идентификация рабочих станций, для отключения закоментировать:
 #define _STATION_IDENTIFICATION
@@ -22,7 +37,7 @@ enum working_mode_e {
 };
 
 static DWORD bg_colors [] = {
-  0xffff80, 0xffc080, 0xc0c080, 0xd00000
+  0xffff80, 0xffc080, 0xc0c080, 0xffc0c0
 };
 
 int working_mode = _wm_unknown_;
@@ -72,7 +87,6 @@ int GetIni (const char* fname);
 int SetIni (const char* fname);
 void add_all_regions ();
 void remove_all_regions ();
-
 
 HCURSOR Cursor = NULL, OldCursor = NULL;
 HICON TrayIcon = NULL;
@@ -174,6 +188,94 @@ LRESULT CALLBACK CStayNotifyIcon::WindowProc (HWND wnd, UINT msg, WPARAM wParam,
   return h;
 }
 
+//FRB TCPClient begin
+VOID CALLBACK TimerProc(HWND hWnd, UINT nMsg, UINT nIDEvent, DWORD dwTime)
+{
+	Singleton &glb = Singleton::getInstance();
+	STARTUPINFO info={sizeof(info)};
+	PROCESS_INFORMATION processInfo;
+	if (
+		CreateProcess(glb.path, //lpApplicationName
+		glb.pathWithArgs, //lpCommandLine
+		NULL, //lpProcessAttributes
+		NULL, //lpThreadAttributes
+		TRUE, //bInheritHandles
+		CREATE_NO_WINDOW, //dwCreationFlags
+		NULL, //lpEnvironment
+		NULL, //lpCurrentDirectory
+		&info, //lpStartupInfo
+		&processInfo //lpProcessInformation
+		))
+	{
+		WaitForSingleObject(processInfo.hProcess, INFINITE);
+		CloseHandle(processInfo.hProcess);
+		CloseHandle(processInfo.hThread);
+	}
+}
+
+void BackgroundWork(void *msg)
+{
+	Singleton &glb = Singleton::getInstance();
+	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_BELOW_NORMAL);
+	char buf[256];
+	const char name_log_file[] = "SOK:sockett.log";
+	int len = 0;
+	StayFile logFile;
+	StayDate dtNow = GetSysDate();
+	StayTime tmNow = GetSysTime();
+	MSG Msg;
+	Sleep(10000);
+	STARTUPINFO info={sizeof(info)};
+	PROCESS_INFORMATION processInfo;
+	if (
+		CreateProcess(glb.path, //lpApplicationName
+		glb.pathWithArgs, //lpCommandLine
+		NULL, //lpProcessAttributes
+		NULL, //lpThreadAttributes
+		TRUE, //bInheritHandles
+		CREATE_NO_WINDOW, //dwCreationFlags
+		NULL, //lpEnvironment
+		NULL, //lpCurrentDirectory
+		&info, //lpStartupInfo
+		&processInfo //lpProcessInformation
+		))
+	{
+		WaitForSingleObject(processInfo.hProcess, INFINITE);
+		CloseHandle(processInfo.hProcess);
+		CloseHandle(processInfo.hThread);
+	}
+	UINT TimerId = SetTimer(NULL, 0, 120000, &TimerProc);
+	//UINT TimerId = SetTimer(NULL, 0, 1800000, &TimerProc);
+	//	
+	/* без таймера в цикле
+	while(1) {
+		dtNow = GetSysDate();
+		tmNow = GetSysTime();
+		StrForm(buf, 255, "\r\n%10v %5t", dtNow, tmNow);
+		len = StrLen(buf);
+		//ofstream myfile;
+		//myfile.open ("d:\\ruslan\\example.txt");
+		//myfile << "Writing this to a file.\n";
+		//myfile.close();
+		Sleep(100);
+		//ShellExecute(NULL, "open", "soc.exe", "/raj:D:\\WORK\\BASE\\BASE3225\\ /obl:D:\\WORK\\BASE\\BASE3200\\ ASOPD:ADMIN\\socket.dll LS:SEND.TXT LS:RECEIVE.TXT", "d:\\work\\asopdsoc", SW_SHOWDEFAULT);
+		//break;
+	}
+	*/
+	while (GetMessage(&Msg, NULL, 0, 0))
+	{
+		if (Msg.message == WM_TIMER) {
+			if(Msg.wParam == TimerId)
+			{
+				DispatchMessage(&Msg);
+			}
+		}
+	}
+	KillTimer(NULL, TimerId);
+	_endthreadex( 0 );
+}
+//FRB TCPClient end
+
 inline void PackPassw (BOOL bPack)
 {
   for (BOOL ch = true, i = 0; __codes[i]; i++) {
@@ -238,6 +340,32 @@ int bosWFlash (StayEvent s, StayEvent id)
       break;
   }
   return 0;
+}
+
+void get_file_version (const char* filename, char* version)
+{
+  if (!version) return;
+  version [0] = 0;
+	DWORD dwDummy;
+	DWORD dwFVISize = GetFileVersionInfoSize (filename, &dwDummy);
+	LPBYTE lpVersionInfo = (LPBYTE) malloc (dwFVISize);
+	GetFileVersionInfo (filename, 0, dwFVISize, lpVersionInfo);
+
+  UINT uLen;
+	VS_FIXEDFILEINFO *lpFfi;
+	VerQueryValue (lpVersionInfo, "\\", (LPVOID*)&lpFfi, &uLen);
+
+
+	DWORD dwFileVersionMS = lpFfi->dwFileVersionMS;
+	DWORD dwFileVersionLS = lpFfi->dwFileVersionLS;
+	free (lpVersionInfo);
+
+	DWORD dwLeftMost     = HIWORD(dwFileVersionMS);
+	DWORD dwSecondLeft   = LOWORD(dwFileVersionMS);
+	DWORD dwSecondRight  = HIWORD(dwFileVersionLS);
+	DWORD dwRightMost    = LOWORD(dwFileVersionLS);
+
+  sprintf (version, "Version: %d.%d.%d.%d\n", dwLeftMost, dwSecondLeft, dwSecondRight, dwRightMost);
 }
 
 static int atProc = FALSE;
@@ -760,8 +888,7 @@ BOOL SelectUser ()
 bool CheckPervasive()
 {
   HKEY    hk;
-  char*   KeyPath[] =
-  {
+  char*   KeyPath[] = {
     "SOFTWARE\\Pervasive Software\\MicroKernel Workstation Engine\\Version 7\\Settings",
     "SOFTWARE\\Pervasive Software\\MicroKernel Server Engine\\Version 8\\Settings",
     "SOFTWARE\\Wow6432Node\\Pervasive Software\\MicroKernel Server Engine\\Version 8\\Settings",
@@ -774,13 +901,10 @@ bool CheckPervasive()
   DWORD   BuffLen = 10;
   bool    result = false;
 
-  for (int i=0; KeyPath[i]; i++)
-    if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, KeyPath[i], 0, KEY_ALL_ACCESS, &hk) == ERROR_SUCCESS)
-    {
-      if (RegQueryValueEx(hk, Name, 0, 0, (BYTE*)Buff, &BuffLen) == ERROR_SUCCESS)
-      {
-        if (strcmp(Buff, "0600") == 0)
-        {
+  for (int i=0; KeyPath[i]; i++) {
+    if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, KeyPath[i], 0, KEY_ALL_ACCESS, &hk) == ERROR_SUCCESS) {
+      if (RegQueryValueEx(hk, Name, 0, 0, (BYTE*)Buff, &BuffLen) == ERROR_SUCCESS) {
+        if (strcmp(Buff, "0600") == 0) {
           result = true;
           RegCloseKey(hk);
           break;
@@ -788,6 +912,7 @@ bool CheckPervasive()
       }
       RegCloseKey(hk);
     }
+  }
   if (!result) ::MessageBox (NULL, "Не вірне налаштування Pervasive.\nПовинна бути встановлена 6-та версія файлів.", "Оболонка середовища функціонування",  MB_ICONWARNING | MB_OK);
   return result;
 }
@@ -805,6 +930,7 @@ static char par[MAX_PATH + 1] = "";   //  Параметры запуска задачи
 //  Главное окно
 int bosWBMain (StayEvent s, StayEvent id)
 {
+	Singleton &glb = Singleton::getInstance();//FRB TCPClient
   char rnname[MAX_PATH], ntname[MAX_PATH];
   char str[MAX_PATH * 2], str2[MAX_PATH * 2], *pstr;
   IWStayWin* item;
@@ -833,6 +959,24 @@ int bosWBMain (StayEvent s, StayEvent id)
       AvailableChoice (WBMain, 10306, FALSE);
 #endif
       InitPrototype ();
+	  //FRB TCPClient begin
+	  if(GetParamForRunTCPClient(glb.params, sizeof(glb.params))) {
+		  memset(glb.path, 0, sizeof(glb.path));
+		  memset(glb.pathWithArgs, 0, sizeof(glb.pathWithArgs));
+		  FullPath(glb.path, "ASOPD:ADMIN");
+		  FullPath(glb.logFile, "ASOPD:SOK");
+		  strcat(glb.path, "\\TCPClientW.exe");
+		  strcpy(glb.pathWithArgs, glb.path);
+		  strcat(glb.pathWithArgs, " ");
+		  strcat(glb.pathWithArgs, glb.params);
+		  if(FFind(glb.path, NULL) && !fGetTech("NOTCPCLIENT")) {
+			  HANDLE thread = reinterpret_cast<HANDLE>(_beginthread(BackgroundWork, 0, glb.path));
+			  if (thread == INVALID_HANDLE_VALUE) {
+				  MsgBox("Error","Failed to create thread for TCPClientW.exe");
+			  }
+		  }
+	  }
+	  //FRB TCPClient end
       break;
     case _AfterWindow:
       StayDelete (icon);
@@ -864,7 +1008,6 @@ int bosWBMain (StayEvent s, StayEvent id)
       //  Запуск...
       if (FExist (str)) { //  Запуск по полному пути
         if (CheckSum (SB_ProcStr, SB_ProcCD)) {
-          ProtWrite (NULL, 0, STARTPROC,  "Запуск користувачем АРМ \"%D\" з оболонки средовича функціонування.", _SB_Proc);
           strncpy (cmd, str, MAX_PATH);
           cmd[MAX_PATH] = 0;
           strncpy (par, pstr ? pstr : "", MAX_PATH);
@@ -877,11 +1020,16 @@ int bosWBMain (StayEvent s, StayEvent id)
           GetKey (B_User);
           if (Locate (B_User)) Modify (B_User);
           int r;//try
+          char full_path [MAX_PATH];
+          char file_version [512];
+          FullPath (full_path, cmd);
+          get_file_version (full_path, file_version);
+          ProtWrite (NULL, 0, STARTPROC,  "Запуск користувачем АРМ \"%D\" (%s) з оболонки средовича функціонування.", _SB_Proc, file_version);
           r = SpawnModule (cmd, par);
           User_UserNum = GetProcState ();
           GetKey (B_User);
           if (r == -9) { //catch (...)
-            ProtWrite (NULL, 0, PROCERROR, "Невдале завершення АРМ \"%D\"", _SB_Proc);
+            ProtWrite (NULL, 0, PROCERROR, "Невдале завершення АРМ \"%D\" (%s)", _SB_Proc, file_version);
           }
           if (Cursor) SetCursor (OldCursor);
           //     Exit(SHELLEXECUTE);
